@@ -1,7 +1,9 @@
 # pycodecs
 Package provides python AVL Protocols Server for Codec 8 and Codec 8 Extended Protocols
+This package will parse the AVL Data and log it in human readable JSON format. Store AVL data as JSON in any data base/store by extending this library.
+```
 Note: Codec8 under progress
-
+```
 ## prerequisite
 
 Python 3.8+
