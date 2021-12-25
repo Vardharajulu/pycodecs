@@ -51,52 +51,51 @@ def process_data(data, length):
             for variable in ['longitude', 'latitude', 'altitude', 'angle', 'satellites', 'speed', 'gps_element_status']:
                 records['gps_element'][variable] = eval(variable)
             
-            event_io_id = int(data[record_start+24:record_start+25+CEIL_VALUE].hex(), 16)	#2 bytes
-            total_io_id = int(data[record_start+26:record_start+27+CEIL_VALUE].hex(), 16)   #2 bytes
-        
-            n1_of_one_byte_io = int(data[record_start+28:record_start+29+CEIL_VALUE].hex(), 16)	#2 bytes
+            event_io_id = int(data[record_start+24:record_start+24+CEIL_VALUE].hex(), 16)	#1 bytes
+            total_io_id = int(data[record_start+25:record_start+25+CEIL_VALUE].hex(), 16)   #1 bytes
+            
+            n1_of_one_byte_io = int(data[record_start+26:record_start+26+CEIL_VALUE].hex(), 16)	#1 bytes
             n1_of_one_byte_values = []
-            slider = record_start+30
+            slider = record_start+27
             for j in range(n1_of_one_byte_io):
-                id  = int(data[slider:slider+1+CEIL_VALUE].hex(), 16)                        #2 bytes
-                value = str(hex(int(data[slider+2:slider+2+CEIL_VALUE].hex(),16)))[2:]       #1 byte
+                id  = int(data[slider:slider+CEIL_VALUE].hex(), 16)                        #1 bytes
+                value = str(hex(int(data[slider+1:slider+1+CEIL_VALUE].hex(),16)))[2:]       #1 byte
                 n1_of_one_byte_values.append((id,value))
-                slider = slider+3
+                slider = slider+2
                 
-            n2_of_two_byte_io = int(data[slider:slider+1+CEIL_VALUE].hex(), 16)	             #2 bytes
+            n2_of_two_byte_io = int(data[slider:slider+CEIL_VALUE].hex(), 16)	             #1 bytes
             n2_of_two_byte_values = []
-            slider = slider+2
+            slider = slider+1
             for j in range(n2_of_two_byte_io):
-                id  = int(data[slider:slider+1+CEIL_VALUE].hex(), 16)                        #2 bytes
-                value = str(hex(int(data[slider+2:slider+3+CEIL_VALUE].hex(),16)))[2:]       #2 bytes
+                id  = int(data[slider:slider+CEIL_VALUE].hex(), 16)                        #1 bytes
+                value = str(hex(int(data[slider+1:slider+2+CEIL_VALUE].hex(),16)))[2:]       #2 bytes
                 n2_of_two_byte_values.append((id,value))
-                slider = slider+4
+                slider = slider+3
 
-            n4_of_four_byte_io = int(data[slider:slider+1+CEIL_VALUE].hex(), 16)	         #2 bytes
+            n4_of_four_byte_io = int(data[slider:slider+CEIL_VALUE].hex(), 16)	         #1 bytes
             n4_of_four_byte_values = []
-            slider = slider+2
+            slider = slider+1
             for j in range(n4_of_four_byte_io):
-                id  = int(data[slider:slider+1+CEIL_VALUE].hex(), 16)                        #2 bytes
-                value = str(hex(int(data[slider+2:slider+5+CEIL_VALUE].hex(),16))) [2:]      #4 bytes
+                id  = int(data[slider:slider+CEIL_VALUE].hex(), 16)                        #1 bytes
+                value = str(hex(int(data[slider+1:slider+4+CEIL_VALUE].hex(),16))) [2:]      #4 bytes
                 n4_of_four_byte_values.append((id,value))
-                slider = slider+6
+                slider = slider+5
 
-            n8_of_eight_byte_io = int(data[slider:slider+1+CEIL_VALUE].hex(), 16)	         #2 bytes
+            n8_of_eight_byte_io = int(data[slider:slider+CEIL_VALUE].hex(), 16)	         #1 bytes
             n8_of_eight_byte_values = []
-            slider = slider+2
+            slider = slider+1
             for j in range(n8_of_eight_byte_io):
-                id  = int(data[slider:slider+1+CEIL_VALUE].hex(), 16)                        #2 bytes
-                value = str(hex(int(data[slider+2:slider+9+CEIL_VALUE].hex(),16)))[2:]       #8 bytes
+                id  = int(data[slider:slider+CEIL_VALUE].hex(), 16)                        #1 bytes
+                value = str(hex(int(data[slider+1:slider+8+CEIL_VALUE].hex(),16)))[2:]       #8 bytes
                 n8_of_eight_byte_values.append((id,value)) 
-                slider = slider+10
+                slider = slider+9
 
             events = {}
             for variable in ['event_io_id', 'total_io_id',
                 'n1_of_one_byte_io', 'n1_of_one_byte_values',
                 'n2_of_two_byte_io', 'n2_of_two_byte_values', 
                 'n4_of_four_byte_io', 'n4_of_four_byte_values',
-                'n8_of_eight_byte_io', 'n8_of_eight_byte_values',
-                'nx_of_x_byte_io', 'nX_of_x_byte_values']:
+                'n8_of_eight_byte_io', 'n8_of_eight_byte_values']:
                     events[variable] = eval(variable)
             records['events']= events
             result['records'].append(records)            

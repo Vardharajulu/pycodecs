@@ -1,5 +1,7 @@
 import socket,  json
-from pycodecs import extcodec8
+from pycodecs import extcodec8, codec8
+
+PROTOCOL = codec8
 
 def start_server():
     try:
@@ -21,14 +23,14 @@ def run_server(server):
             print("Client Connected: " , clientAddress)
             print('listening to client ...')
             header = clientConnection.recv(8)
-            data_length =  extcodec8.verify_header(header)
+            data_length =  PROTOCOL.verify_header(header)
             crc_length = 4
             body_length = data_length + crc_length
             if data_length:
                 data = clientConnection.recv(body_length)
-                result = extcodec8.process_data(data, body_length)
+                result = PROTOCOL.process_data(data, body_length)
                 print(json.dumps(result,sort_keys=True, indent=4))
-                extcodec8.send_response(clientConnection, result['records_count'])
+                PROTOCOL.send_response(clientConnection, result['records_count'])
             else:
                 print("Header with Error/No Data")
                 print("Client disconnected....")

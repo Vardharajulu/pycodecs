@@ -1,11 +1,18 @@
 from binascii import unhexlify
 import socket
 import struct
+from server import PROTOCOL
+from pycodecs import extcodec8, codec8
+
 SERVER = "127.0.0.1"
 PORT = 8080
 
-with open('data/extcodec8.hex', 'r') as f:
-    data = f.read()
+if PROTOCOL == extcodec8:
+  with open('data/extcodec8.hex', 'r') as f:
+      data = f.read()
+else:
+  with open('data/codec8_3.hex', 'r') as f:
+      data = f.read()
 
 buffer = bytes()
 for i in range(0,len(data),2):
