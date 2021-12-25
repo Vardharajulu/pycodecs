@@ -1,7 +1,12 @@
-import socket,  json
+import socket
+import json
+import sys
 from pycodecs import extcodec8, codec8
 
-PROTOCOL = codec8
+PROTOCOL = extcodec8
+
+if len(sys.argv)==2 and sys.argv[1]=='codec8':
+    PROTOCOL = codec8    
 
 def start_server():
     try:
@@ -9,7 +14,10 @@ def start_server():
         server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         server.bind((hostname, port))
         server.listen(1)
-        print("AVL Codec Server started ...")
+        if PROTOCOL == extcodec8:
+            print("AVL Codec 8 extended Server started ...")
+        else:
+            print("AVL Codec 8 Server started ...")
         return server
     except Exception as e:
         print("Failed to start AVL codec server")
@@ -37,8 +45,8 @@ def run_server(server):
                 clientConnection.close()
     except Exception as e:
         print("Exitting codec server ...")
-        print(e)
-
+        
 if __name__ == "__main__":
     server = start_server()
-    run_server(server)
+    if server:
+        run_server(server)
